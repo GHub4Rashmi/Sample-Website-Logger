@@ -1,0 +1,63 @@
+<head>
+	<style>
+		h1 {
+		color: olive;
+		font-family: Consolas;
+		font-weight: bold;
+		}
+		p {
+		color: darkgreen;
+		font-size: 120%;
+		font-weight: bold;
+		}
+
+		.log {
+			color: grey;
+		}
+		button {
+			color: white;
+			background-color: black;
+		}
+	</style>
+	
+	<script src=
+	"https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js">
+	</script>
+	
+	<script>
+		function logItem(element) {
+			var dt = new Date();
+			var utcDate = dt.toUTCString();
+			var ip;
+			$.getJSON("https://api.ipify.org?format=json", function(data) { ip = data.ip; }).then(response => 
+			{
+				var log = '{"message": "User has ' + element.id + ' the item", "time": "'+utcDate+'", "ip":' + ip;
+				
+				$.ajax({
+					url: "http://localhost:8080",
+					data: log,
+					type: "POST",
+					dataType: "data",
+					success: function(data){
+						console.log("Over");
+					},
+					error: function(err){
+						console.log(err);
+					}
+				});
+				document.getElementById("display").innerHTML = document.getElementById("display").innerHTML + '</br>' + log;
+			});
+		}
+	</script>
+</head>
+<body>
+	<h1>ABC Online Mart</h1>
+	<p>Product 1</p>
+	<button type="button" onclick="logItem(this)" id="purchased"> Purchase </button>
+	<button type="button" onclick="logItem(this)" id="wishlisted"> Wish list </button>
+	<button type="button" onclick="logItem(this)" id="disliked"> Not interested </button>
+	</br>
+	<p>Displaying logs:</p></br>
+	<span class="log" id="display">
+	</span>
+</body>
